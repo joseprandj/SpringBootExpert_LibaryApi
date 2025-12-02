@@ -2,6 +2,10 @@ package com.github.joseprandj.SpringBootExpert_LibaryApi.entity;
 
 import com.github.joseprandj.SpringBootExpert_LibaryApi.enums.GenderBook;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,6 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(schema = "JJ", name = "BOOK")
+@Getter @Setter @NoArgsConstructor @ToString
 public class Book {
 
     @Id

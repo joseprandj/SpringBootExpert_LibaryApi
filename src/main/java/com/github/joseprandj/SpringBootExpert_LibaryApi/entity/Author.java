@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Table(schema = "JJ", name = "AUTHOR")
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @ToString
 public class Author {
 
     @Id
@@ -31,7 +32,8 @@ public class Author {
     @Column(name = "NATIONALITY", length = 50)
     private String nationality;
 
-    @OneToMany(mappedBy = "author")
+//    @OneToMany(mappedBy = "author")
+    @Transient
     private List<Book> books;
 
     @PrePersist
