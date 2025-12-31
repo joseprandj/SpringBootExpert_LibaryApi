@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(schema = "JJ", name = "BOOK")
-@Getter @Setter @NoArgsConstructor @ToString
+@Getter @Setter @NoArgsConstructor @ToString(exclude = "author")
 public class Book {
 
     @Id
@@ -40,7 +40,10 @@ public class Book {
     @Column(name = "PRICE", precision = 18, scale = 2)
     private BigDecimal price;
 
-    @ManyToOne
+    @ManyToOne(
+        //cascade = CascadeType.ALL
+        fetch = FetchType.LAZY
+    )
     @JoinColumn(name = "ID_AUTHOR")
     private Author author;
 

@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Table(schema = "JJ", name = "AUTHOR")
-@Getter @Setter @NoArgsConstructor @ToString
+@Getter @Setter @NoArgsConstructor @ToString(exclude = "author")
 public class Author {
 
     @Id
@@ -32,8 +32,7 @@ public class Author {
     @Column(name = "NATIONALITY", length = 50)
     private String nationality;
 
-//    @OneToMany(mappedBy = "author")
-    @Transient
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Book> books;
 
     @PrePersist
