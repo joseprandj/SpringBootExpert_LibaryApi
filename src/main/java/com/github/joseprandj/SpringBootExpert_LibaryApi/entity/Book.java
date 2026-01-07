@@ -6,14 +6,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(schema = "JJ", name = "BOOK")
 @Getter @Setter @NoArgsConstructor @ToString(exclude = "author")
+@EntityListeners(AuditingEntityListener.class)
 public class Book {
 
     @Id
@@ -46,6 +52,17 @@ public class Book {
     )
     @JoinColumn(name = "ID_AUTHOR")
     private Author author;
+
+    @CreatedDate
+    @Column(name = "DT_CREATED")
+    private LocalDateTime dtCreated;
+
+    @LastModifiedDate
+    @Column(name = "DT_UPDATED")
+    private LocalDateTime dtUpdated;
+
+    @Column(name = "ID_USER")
+    private UUID idUser;
 
     @PrePersist
     public void prePersist() {
