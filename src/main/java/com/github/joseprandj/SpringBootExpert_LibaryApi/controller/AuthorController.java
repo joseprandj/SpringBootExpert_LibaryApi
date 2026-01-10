@@ -2,10 +2,13 @@ package com.github.joseprandj.SpringBootExpert_LibaryApi.controller;
 
 import com.github.joseprandj.SpringBootExpert_LibaryApi.dto.AuthorDTO;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.dto.AuthorResponseDTO;
-import com.github.joseprandj.SpringBootExpert_LibaryApi.dto.ErrorResponseDTO;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.entity.Author;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.exception.DuplicatedRegisterExcepction;
+import com.github.joseprandj.SpringBootExpert_LibaryApi.exception.ErrorResponse;
+import com.github.joseprandj.SpringBootExpert_LibaryApi.exception.OperationNotAllowedExecption;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.service.AuthorService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,19 +20,18 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.github.joseprandj.SpringBootExpert_LibaryApi.dto.AuthorResponseDTO.authorResponseDto;
+import static com.github.joseprandj.SpringBootExpert_LibaryApi.exception.ErrorResponse.conflict;
+import static com.github.joseprandj.SpringBootExpert_LibaryApi.exception.ErrorResponse.responseStandard;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/authors")
 public class AuthorController {
 
     private final AuthorService authorService;
 
-    public AuthorController(AuthorService authorService) {
-        this.authorService = authorService;
-    }
-
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody AuthorDTO authorDTO){
+    public ResponseEntity<Object> save(@Valid @RequestBody AuthorDTO authorDTO){
         try {
             Author author = authorDTO.authorDtoToAuthor();
             authorService.saveAuthor(author);
@@ -42,8 +44,8 @@ public class AuthorController {
 
             return ResponseEntity.created(authorURI).body(authorResponseDto(author));
         } catch (DuplicatedRegisterExcepction ex){
-            ErrorResponseDTO errorResponseDTO = ErrorResponseDTO.conflict(ex.getMessage());
-            return ResponseEntity.status(errorResponseDTO.status()).body(errorResponseDTO);
+            ErrorResponse ErrorResponse = conflict(ex.getMessage());
+            return ResponseEntity.status(ErrorResponse.status()).body(ErrorResponse);
         }
     }
 
@@ -85,21 +87,26 @@ public class AuthorController {
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Author not found");
         } catch (DuplicatedRegisterExcepction ex) {
-            ErrorResponseDTO errorResponseDTO = ErrorResponseDTO.conflict(ex.getMessage());
-            return ResponseEntity.status(errorResponseDTO.status()).body(errorResponseDTO);
+            ErrorResponse ErrorResponse = conflict(ex.getMessage());
+            return ResponseEntity.status(ErrorResponse.status()).body(ErrorResponse);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAuthor(@PathVariable String id){
-        Author author = authorService.searchAuthorForIdApi(UUID.fromString(id));
+        try {
+            Author author = authorService.searchAuthorForIdApi(UUID.fromString(id));
 
-        if (author != null){
-            authorService.deleteAuthor(author);
-            return ResponseEntity.noContent().build();
+            if (author != null) {
+                authorService.deleteAuthor(author);
+                return ResponseEntity.noContent().build();
+            }
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Author Not Found!");
+        } catch (OperationNotAllowedExecption ex){
+            ErrorResponse ErrorResponse = responseStandard(ex.getMessage());
+            return ResponseEntity.status(ErrorResponse.status()).body(ErrorResponse);
         }
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Author Not Found!");
     }
 
 

@@ -29,7 +29,7 @@ public class BookRepositoryTest {
         book.setGenderBook(GenderBook.FICTION);
         book.setTitle("UFO");
         book.setPublicatedDate(LocalDate.of(1980, 10, 31));
-        book.setAuthor(authorRepository.findById(1L).orElseThrow());
+        book.setAuthor(authorRepository.findById(3L).orElseThrow());
         bookRepository.save(book);
     }
 
