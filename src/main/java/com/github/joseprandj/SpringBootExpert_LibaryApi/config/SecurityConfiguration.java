@@ -2,6 +2,7 @@ package com.github.joseprandj.SpringBootExpert_LibaryApi.config;
 
 import com.github.joseprandj.SpringBootExpert_LibaryApi.security.CustomAuthentication;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.security.CustomUserDetailsService;
+import com.github.joseprandj.SpringBootExpert_LibaryApi.security.LoginSocialSuccessHandler;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, LoginSocialSuccessHandler loginSocialSuccessHandler) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
@@ -40,7 +41,10 @@ public class SecurityConfiguration {
 //                    authorize.requestMatchers("/books/**").hasAnyRole("USER", "ADMIN");
                     authorize.anyRequest().authenticated();
                 })
-                .oauth2Login(Customizer.withDefaults())
+//                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(oauth2 -> {
+                    oauth2.successHandler(loginSocialSuccessHandler);
+                })
                 .build();
     }
 
