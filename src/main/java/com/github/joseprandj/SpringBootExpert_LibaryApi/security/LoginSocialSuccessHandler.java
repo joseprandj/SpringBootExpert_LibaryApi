@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -30,10 +31,23 @@ public class LoginSocialSuccessHandler extends SavedRequestAwareAuthenticationSu
 
         User user = service.getUserByEmail(email);
 
+        if (user == null) user = registerAuthenticationUser(email);
+
         authentication = new CustomAuthentication(user);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         super.onAuthenticationSuccess(request, response, authentication);
+    }
+
+    private User registerAuthenticationUser(String email) {
+        User user;
+        user = new User();
+        user.setEmail(email);
+        user.setUsername(email);
+        user.setPassword("123");
+        user.setRoles("USER");
+        service.save(user);
+        return user;
     }
 }

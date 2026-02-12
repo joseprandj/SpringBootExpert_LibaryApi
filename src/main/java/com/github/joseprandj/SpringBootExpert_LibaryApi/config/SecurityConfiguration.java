@@ -28,12 +28,11 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
-//                .formLogin(
-//                        configurer -> {
-//                            configurer.loginPage("/login");
-//                        }
-//                )
-                .formLogin(Customizer.withDefaults())
+                .formLogin(configurer -> {
+                            configurer.loginPage("/login");
+                        }
+                )
+//                .formLogin(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "/users").permitAll();
@@ -43,6 +42,7 @@ public class SecurityConfiguration {
                 })
 //                .oauth2Login(Customizer.withDefaults())
                 .oauth2Login(oauth2 -> {
+                    oauth2.loginPage("/login");
                     oauth2.successHandler(loginSocialSuccessHandler);
                 })
                 .build();
@@ -53,7 +53,7 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder(10);
     }
 
-//    @Bean
+    //    @Bean
     public UserDetailsService userDetailsService(UserService userService) {
 //        UserDetails user1 = User.builder()
 //                .username("JJ")
@@ -72,7 +72,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public GrantedAuthorityDefaults grantedAuthorityDefaults(){
+    public GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new GrantedAuthorityDefaults("");
     }
 }
