@@ -3,18 +3,13 @@ package com.github.joseprandj.SpringBootExpert_LibaryApi.controller;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.dto.AuthorDTO;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.dto.AuthorResponseDTO;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.entity.Author;
-import com.github.joseprandj.SpringBootExpert_LibaryApi.entity.User;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.mappers.AuthorMapper;
-import com.github.joseprandj.SpringBootExpert_LibaryApi.security.SecurityService;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.service.AuthorService;
-import com.github.joseprandj.SpringBootExpert_LibaryApi.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
