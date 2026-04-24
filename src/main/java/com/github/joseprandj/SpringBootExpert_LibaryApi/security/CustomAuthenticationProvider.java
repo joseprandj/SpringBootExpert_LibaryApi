@@ -3,7 +3,6 @@ package com.github.joseprandj.SpringBootExpert_LibaryApi.security;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.entity.User;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,7 +19,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     private final PasswordEncoder encoder;
 
     @Override
-    public @Nullable Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String password = authentication.getCredentials().toString();
         User user = service.getUserByUsername(authentication.getName());
 
