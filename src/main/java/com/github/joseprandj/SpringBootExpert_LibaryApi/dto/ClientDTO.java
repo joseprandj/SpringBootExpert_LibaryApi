@@ -7,7 +7,7 @@ public record ClientDTO(
         String clientId,
 
         @NotBlank
-        String clientSecrect,
+        String clientSecret,
 
         @NotBlank
         String redirectUri,

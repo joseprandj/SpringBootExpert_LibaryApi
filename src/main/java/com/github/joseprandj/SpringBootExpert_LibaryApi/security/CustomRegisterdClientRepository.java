@@ -36,14 +36,13 @@ public class CustomRegisterdClientRepository implements RegisteredClientReposito
         return RegisteredClient
                 .withId(client.getId().toString())
                 .clientId(client.getClientId())
-                .clientSecret(client.getClientSecrect())
+                .clientSecret(client.getClientSecret())
                 .redirectUri(client.getRedirectUri())
                 .scope(client.getScope())
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .tokenSettings(tokenSettings)
-                .clientSecret(clientSettings.toString())
                 .build();
     }
 }

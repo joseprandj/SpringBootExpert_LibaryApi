@@ -18,7 +18,7 @@ public class Client {
     private String clientId;
 
     @Column(name = "CLIENT_SECRET", length = 400, nullable = false)
-    private String clientSecrect;
+    private String clientSecret;
 
     @Column(name = "URI", nullable = false)
     private String redirectUri;

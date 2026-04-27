@@ -14,7 +14,7 @@ public class ClientService {
     private final PasswordEncoder encoder;
 
     public Client save(Client client){
-        client.setClientSecrect(encoder.encode(client.getClientSecrect()));
+        client.setClientSecret(encoder.encode(client.getClientSecret()));
         return repository.save(client);
     }
 
