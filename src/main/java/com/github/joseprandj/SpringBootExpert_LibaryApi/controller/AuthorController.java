@@ -1,10 +1,15 @@
 package com.github.joseprandj.SpringBootExpert_LibaryApi.controller;
 
+import com.github.joseprandj.SpringBootExpert_LibaryApi.docs.AuthorControllerDocs;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.dto.AuthorDTO;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.dto.AuthorResponseDTO;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.entity.Author;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.mappers.AuthorMapper;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.service.AuthorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,13 +27,15 @@ import static com.github.joseprandj.SpringBootExpert_LibaryApi.dto.AuthorRespons
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/authors")
-public class AuthorController implements GenericController{
+
+public class AuthorController implements AuthorControllerDocs, GenericController{
 
     private final AuthorService service;
     private final AuthorMapper mapper;
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
+    @Override
     public ResponseEntity<Object> save(@Valid @RequestBody AuthorDTO dto){
         Author author = mapper.toEntity(dto);
         service.saveAuthor(author);
@@ -40,6 +47,7 @@ public class AuthorController implements GenericController{
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @Override
     public ResponseEntity<List<AuthorResponseDTO>> searchListAuthor(
         @RequestParam(value = "name", required = false) String name,
         @RequestParam(value = "nationality", required = false) String nationality
@@ -54,6 +62,7 @@ public class AuthorController implements GenericController{
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @Override
     public ResponseEntity<AuthorResponseDTO> searchAuthor(@PathVariable("id") String id){
         return service
             .searchAuthorForIdApi(UUID.fromString(id))
@@ -65,6 +74,7 @@ public class AuthorController implements GenericController{
     
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @Override
     public ResponseEntity<AuthorResponseDTO> updatedAuthor(@PathVariable("id") String id, @RequestBody AuthorDTO dto){
         return service
             .searchAuthorForIdApi(UUID.fromString(id))
@@ -82,6 +92,7 @@ public class AuthorController implements GenericController{
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @Override
     public ResponseEntity<?> deleteAuthor(@PathVariable String id){
         return service
             .searchAuthorForIdApi(UUID.fromString(id))
