@@ -1,5 +1,6 @@
 package com.github.joseprandj.SpringBootExpert_LibaryApi.controller;
 
+import com.github.joseprandj.SpringBootExpert_LibaryApi.security.CustomAuthentication;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,9 @@ public class LoginViewController {
     @GetMapping("/")
     @ResponseBody
     public String pageHome(Authentication authentication){
+        if (authentication instanceof CustomAuthentication customAuthentication){
+            System.out.println(customAuthentication.getUser());
+        }
         return "Olá " + authentication.getName();
     }
 

@@ -3,10 +3,12 @@ package com.github.joseprandj.SpringBootExpert_LibaryApi.security;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.entity.Client;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.service.ClientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.stereotype.Component;
@@ -42,7 +44,28 @@ public class CustomRegisterdClientRepository implements RegisteredClientReposito
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .tokenSettings(tokenSettings)
+                .clientSettings(clientSettings)
                 .build();
+    }
+
+    @Bean
+    public AuthorizationServerSettings authorizationServerSettings(){
+        return  AuthorizationServerSettings.builder()
+            // Obter token
+            .tokenEndpoint("/oauth2/token")
+            // Utilizado para obter status do token
+            .tokenIntrospectionEndpoint("/oauth2/introspect")
+            // Utilizado para revogar o token
+            .tokenRevocationEndpoint("/oauth2/revoke")
+            .authorizationEndpoint("/oauth2/authorize")
+            // Obter informações do usuário OPEN ID CONNECT
+            .oidcUserInfoEndpoint("/oauth2/iuserinfo")
+            // Obter a chave publica para verificar assinatura do token
+            .jwkSetEndpoint("/oauth2/jwks")
+            // Logout
+            .oidcLogoutEndpoint("/oauth2/logout")
+            .build();
     }
 }
