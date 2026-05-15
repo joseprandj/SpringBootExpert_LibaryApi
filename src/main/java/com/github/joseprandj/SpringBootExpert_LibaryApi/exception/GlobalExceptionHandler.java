@@ -3,6 +3,7 @@ package com.github.joseprandj.SpringBootExpert_LibaryApi.exception;
 
 import com.github.joseprandj.SpringBootExpert_LibaryApi.dto.ErrorField;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.dto.ErrorResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,11 +16,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleUntreatedErrors(RuntimeException ex){
+        log.error("Erro inesperado", ex);
+
         return new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "An unexpected error occurred. Contact the administrator.",

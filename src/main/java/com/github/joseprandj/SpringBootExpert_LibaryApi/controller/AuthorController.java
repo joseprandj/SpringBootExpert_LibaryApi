@@ -6,12 +6,9 @@ import com.github.joseprandj.SpringBootExpert_LibaryApi.dto.AuthorResponseDTO;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.entity.Author;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.mappers.AuthorMapper;
 import com.github.joseprandj.SpringBootExpert_LibaryApi.service.AuthorService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +24,7 @@ import static com.github.joseprandj.SpringBootExpert_LibaryApi.dto.AuthorRespons
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/authors")
-
+@Slf4j
 public class AuthorController implements AuthorControllerDocs, GenericController{
 
     private final AuthorService service;
@@ -37,6 +34,8 @@ public class AuthorController implements AuthorControllerDocs, GenericController
     @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<Object> save(@Valid @RequestBody AuthorDTO dto){
+        log.info("Cadastrando novo autor: {}", dto.name());
+
         Author author = mapper.toEntity(dto);
         service.saveAuthor(author);
 
@@ -52,11 +51,13 @@ public class AuthorController implements AuthorControllerDocs, GenericController
         @RequestParam(value = "name", required = false) String name,
         @RequestParam(value = "nationality", required = false) String nationality
     ){
+
         List<AuthorResponseDTO> list = service
             .listByExample(name, nationality)
             .stream()
             .map(author -> authorResponseDto(author))
             .collect(Collectors.toList());
+
         return ResponseEntity.ok(list);
     }
 
@@ -94,6 +95,8 @@ public class AuthorController implements AuthorControllerDocs, GenericController
     @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<?> deleteAuthor(@PathVariable String id){
+        log.info("Deletenado Autor: {}", id);
+
         return service
             .searchAuthorForIdApi(UUID.fromString(id))
             .map(author -> {
